@@ -2,22 +2,12 @@
 	import { faWarning } from "@fortawesome/free-solid-svg-icons";
 	import Fa from "svelte-fa";
 	import type { ActionData } from "./$types";
-	import { goto } from "$app/navigation";
 
 	export let form: ActionData;
+
 </script>
 
 <section class="max-w-sm mx-auto mt-56">
-	<div class="prose">
-		<h1>Sign Up</h1>
-	</div>
-	<div class="flex gap-x-6 mt-4">
-		<h1>Have Account ? </h1>
-		<p>
-			<a href="/login" class="link">Log In</a>
-		</p>
-	</div>
-
 	<form
 		class="flex flex-col gap-6 my-6"
 		method="POST"
@@ -30,8 +20,19 @@
 				</div>
 			</div>
 		{/if}
+		<div class="prose">
+			<h1>Log In</h1>
+		</div>
+		<div class="flex gap-x-6">
+			<h1>No Account ? </h1>
+			<p>
+				<a href="/signup" class="link">Sign Up</a>
+			</p>
+		</div>
 		<p>
 			<input
+				autocomplete="email"
+				autocorrect="off"
 				type="email"
 				name="email"
 				placeholder="Email..."
@@ -42,6 +43,7 @@
 		</p>
 		<p>
 			<input
+				autocomplete="current-password"
 				type="password"
 				name="password"
 				placeholder="Password..."
@@ -49,17 +51,8 @@
 				required
 			/>
 		</p>
-		<p>
-			<input
-				type="password"
-				name="password-confirm"
-				placeholder="Confirm password..."
-				class="input input-bordered w-full"
-				required
-			/>
-		</p>
 		<p class="flex items-center gap-6 mt-6">
-			<button class="btn btn-primary w-full">Sign Up</button>
+			<button class="btn btn-primary w-full">Log In</button>
 		</p>
 	</form>
 </section>
