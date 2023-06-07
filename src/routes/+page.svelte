@@ -6,8 +6,3 @@
     SvelteKit.
 </div>
   
-<style lang="postcss">
-:global(html) {
-    background-color: theme(red);
-}
-</style>
