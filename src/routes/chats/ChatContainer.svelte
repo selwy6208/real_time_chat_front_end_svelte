@@ -1,5 +1,4 @@
 <script lang="ts">
-    import SignOut from "./SignOut.svelte"
     import Contact from "./Contact.svelte"
     import EmojiMultiple from "../../components/EmojiMultiple.svelte"
     import Send from "../../components/Send.svelte"
@@ -10,9 +9,6 @@
       <div class="flex items-center justify-between bg-cc-200 dark:bg-neutral-800 px-8 py-4">
         <div class="flex items-center space-x-4 cursor-pointer">
           <Contact />
-        </div>
-        <div class="hidden md:block">
-          <SignOut />
         </div>
       </div>
       <!-- chat screen -->
