@@ -4,15 +4,13 @@
     import Send from "../../components/Send.svelte"
 </script>
 
-    <section class="h-screen flex flex-col text-cc-400 dark:text-white">
+    <section class="static flex flex-col text-cc-400 dark:text-white">
       <!-- header -->
-      <div class="flex items-center justify-between bg-cc-200 dark:bg-neutral-800 px-8 py-4">
-        <div class="flex items-center space-x-4 cursor-pointer">
+      <div class="flex justify-center px-8 py-2 border-solid border-2 border-grey-100">
           <Contact />
-        </div>
       </div>
       <!-- chat screen -->
-      <div class="p-8 flex-1 overflow-y-scroll space-y-2">
+      <div class="p-8 flex-1 overflow-y-scroll space-y-2 bg-zinc-200">
         <!--{messages.length > 0 ? (
         //   messages.map((message) => {
         //     return (
@@ -39,43 +37,32 @@
         //     );
         //   })
         // ) : (  -->
-          <div class="grid place-content-center h-full text-center space-y-2 px-8">
-            <div class="flex items-center -space-x-4 mx-auto">
-              <img
-                 src={`data:image/svg+xml`}
-                alt="current user profile"
-                class="w-20 aspect-square border-4 rounded-full border-cc-100 dark:border-neutral-900"
-              />
-              <img
-                 src={`data:image/svg+xml`}
-                alt="current user profile"
-                class="w-20 aspect-square border-4 rounded-full border-cc-100 dark:border-neutral-900"
-              />
-            </div>
+          <div class="grid place-content-center h-[38rem] text-center space-y-2 px-8">
             <h1> 
                 <!-- {currentUser?.username},  -->
                 let's chat...
             </h1>
             <p>
-              No messages yet. Start by sending a message to{" "}
+              No messages yet. Start by sending a message
                <!-- {currentChat?.username} -->
             </p>
           </div>
+          <!-- chat input -->
+          <form
+            class="absolute bottom-0 bg-cc-200 dark:bg-neutral-800 px-3 py-4 flex items-center justify-between sticky bottom-0">
+            <div class="icon-style">
+              <EmojiMultiple />
+            </div>
+            <textarea
+              placeholder="type you message here..."
+              class="input input-bordered bg-transparent w-full mx-5 text-cc-400 dark:text-white"
+            />
+             <!-- {messageToSend.trim() && ( -->
+              <button class="icon-style">
+                <Send />
+              </button>
+             <!-- )} -->
+          </form>
       </div>
-      <!-- chat input -->
-      <form
-        class="bg-cc-200 dark:bg-neutral-800 px-8 py-4 flex h-auto items-center justify-between sticky bottom-0">
-        <div class="icon-style">
-          <EmojiMultiple />
-        </div>
-        <textarea
-          placeholder="type you message here..."
-          class="input input-bordered bg-transparent w-full mx-5 text-cc-400 dark:text-white"
-        />
-         <!-- {messageToSend.trim() && ( -->
-          <button class="icon-style">
-            <Send />
-          </button>
-         <!-- )} -->
-      </form>
+      
     </section>

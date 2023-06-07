@@ -4,12 +4,11 @@
     import Theme from '../../components/Theme.svelte';
 </script>
   
-  <section class="bg-cc-200 text-cc-400 dark:text-white dark:bg-neutral-800 flex flex-col col-span-1 lg:col-span-2 xl:col-span-1 h-screen">
-    <div class="flex items-center justify-center lg:justify-between px-8 py-4 sticky bottom-0">
+  <section class="bg-slate-100 shadow shadow-slate-500/40 text-cc-400 flex flex-col col-span-1 lg:col-span-2 xl:col-span-1 h-screen">
+    <div class="shadow shadow-blue-500/40">
       <ul
         class="flex list-none flex-row flex-wrap border-b-0 pl-0"
         role="tablist"
-        data-te-nav-ref
       >
         <li role="presentation">
           <a
@@ -36,21 +35,7 @@
         </li>
       </ul>
     </div>
-    <div class="space-y-2 py-0.5 lg:py-4 flex-1 overflow-y-scroll">
-      <div class="flex items-center justify-center lg:justify-start space-x-4 hover:bg-cc-100 dark:hover:bg-neutral-900 cursor-pointer lg:px-8 py-4">
-        <Contact />
-      </div>
-    </div>
-    <!-- current user -->
-    <div class="flex items-center justify-center lg:justify-between px-8 py-4 sticky bottom-0">
-      <div class="hidden lg:flex items-center space-x-4 cursor-pointer">
-        <Contact />
-      </div>
-      <SignOut />
+    <div class="flex items-center justify-center lg:justify-start space-x-4 hover:bg-cc-100 dark:hover:bg-neutral-900 cursor-pointer lg:px-8 py-4">
+      <Contact />
     </div>
   </section>
-  
-  <style>
-    /* Add your custom styles here */
-  </style>
-  
