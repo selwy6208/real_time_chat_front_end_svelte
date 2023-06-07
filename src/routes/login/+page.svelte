@@ -1,16 +1,47 @@
 <script lang="ts">
 	import { faWarning } from "@fortawesome/free-solid-svg-icons";
 	import Fa from "svelte-fa";
+
 	import type { ActionData } from "./$types";
+	import { goto } from "$app/navigation";
 
 	export let form: ActionData;
+
+	let formData = {
+		email: '',
+		password: '',
+  	};
+
+  async function handleSubmit() {
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (response.ok) {
+        // Request was successful
+        const data = await response.json();
+		goto("/chats");
+        console.log('Response:', data);
+      } else {
+        // Request failed
+        console.error('Error:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
 
 </script>
 
 <section class="max-w-sm mx-auto mt-56">
 	<form
 		class="flex flex-col gap-6 my-6"
-		method="POST"
+		on:submit|preventDefault={handleSubmit}
 	>
 		{#if form?.error}
 			<div class="alert alert-error">
