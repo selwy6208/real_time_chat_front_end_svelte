@@ -68,15 +68,13 @@
       </div>
       <!-- chat input -->
       <form
-        class="bg-cc-200 dark:bg-neutral-800 px-8 py-4 flex items-center justify-between sticky bottom-0">
+        class="bg-cc-200 dark:bg-neutral-800 px-8 py-4 flex h-auto items-center justify-between sticky bottom-0">
         <div class="icon-style">
           <EmojiMultiple />
         </div>
-
-        <input
-          type="text"
+        <textarea
           placeholder="type you message here..."
-          class="bg-transparent w-full text-cc-400 dark:text-white"
+          class="input input-bordered bg-transparent w-full mx-5 text-cc-400 dark:text-white"
         />
          <!-- {messageToSend.trim() && ( -->
           <button class="icon-style">

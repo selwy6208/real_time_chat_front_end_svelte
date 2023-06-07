@@ -15,9 +15,6 @@
         <Theme />
       </div>
     </div>
-    <h1 class="px-8 hidden lg:block">
-      Select contact to start a conversation😀
-    </h1>
     <div class="space-y-2 py-0.5 lg:py-4 flex-1 overflow-y-scroll">
       <div class="flex items-center justify-center lg:justify-start space-x-4 hover:bg-cc-100 dark:hover:bg-neutral-900 cursor-pointer lg:px-8 py-4">
         <Contact />
