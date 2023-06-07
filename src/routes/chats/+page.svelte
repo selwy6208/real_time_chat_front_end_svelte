@@ -1,6 +1,5 @@
 <script lang="ts">
     import Contacts from "./Contacts.svelte"
-    import Welcome from "./Welcome.svelte"
     import ChatContainer from "./ChatContainer.svelte"
 </script>
 
