@@ -1,7 +1,7 @@
 <script lang="ts">
-    let contacts: []
+    export let contact: User
 </script>
-<div class="py-2">
+<div class="flex py-2 items-center gap-10">
     <img
         src={`data:image/svg+xml;base64`}
         alt="current user profile"
@@ -10,10 +10,9 @@
         <!-- {active && (
             <div class="w-4 aspect-square rounded-full bg-green-500 absolute right-0 bottom-0 border-2 border-cc-200 dark:border-neutral-800"></div>
             )} -->
-            <div class="lg:block leading-relaxed text-sky-700">
-                John Doe
-                <!-- <h1>{user?.username}</h1>
-                    <${user?.avatarImage}`}
+            <div class="hidden lg:block leading-relaxed">
+                <h1>{contact.userName}</h1>
+                  <!--   <${user?.avatarImage}`}
                 <p>{user?.email}</p> -->
     </div>
 </div>

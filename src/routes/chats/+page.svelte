@@ -11,17 +11,17 @@
     let contacts: User[] = [
         {
             id: 1,
-            userName: "shengwu",
+            userName: "ShengWu Jin",
             email: "shengwu@gmail.com"
         },
         {
             id: 2,
-            userName: "steven",
+            userName: "Maxim Ochoa",
             email: "st@gmail.com"
         },
     ]
-    let currentChat: any
-    let currentUser: string | null
+    let currentChat: Chat
+    let currentUser: User
 
     const handleChatChange = (chat: any) => {
         currentChat = chat
@@ -42,7 +42,7 @@
         const token = async () => {
             // localStorage.getItem("user")
             // ? 
-            currentUser = localStorage.getItem("user")
+            currentUser = JSON.parse(localStorage.getItem("user") as string)
             // : goto("/")
         }
         token()
@@ -56,9 +56,9 @@
         <Contacts changeChat={handleChatChange} contacts={contacts} />
         <main class="col-span-3 lg:col-span-2 xl:col-span-3">
             <!-- {#if currentChat === undefined} 
-                <Welcome username={currentUser?.username} />
+                <Welcome username={currentUser?.userName} />
             {:else}  -->
-            <ChatContainer />
+            <ChatContainer currentUser={currentUser} currentChat={currentChat} />
             <!-- {/if} -->
         </main>
     </div>
