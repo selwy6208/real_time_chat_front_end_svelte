@@ -28,9 +28,10 @@
     /* If the user info is not exist, rediret to the home */
     onMount(async () => {
         const token = async () => {
-            localStorage.getItem("user")
-            ? currentUser = localStorage.getItem("user")
-            : goto("/home")
+            // localStorage.getItem("user")
+            // ? 
+            currentUser = localStorage.getItem("user")
+            // : goto("/")
         }
         token()
     })
@@ -39,13 +40,14 @@
 
 <div>
     <Header />
-    <div class="grid grid-cols-4 h-screen bg-cc-100 dark:bg-neutral-900 ">
+    <div class="grid grid-cols-4 h-auto bg-cc-100 dark:bg-neutral-900 ">
         <Contacts changeChat={handleChatChange} />
         <main class="col-span-3 lg:col-span-2 xl:col-span-3">
-            {#if currentChat === undefined} ? (
+            <!-- {#if currentChat === undefined} 
                 <Welcome username={currentUser?.username} />
-            ) : <ChatContainer />
-            {/if}
+            {:else}  -->
+            <ChatContainer />
+            <!-- {/if} -->
         </main>
     </div>
 </div>
