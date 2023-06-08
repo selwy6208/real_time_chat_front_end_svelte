@@ -3,3 +3,8 @@ interface User {
     userName: string
     email: string
 }
+
+interface Chat {
+    id: number
+    message: string
+}
