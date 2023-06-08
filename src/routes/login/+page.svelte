@@ -25,7 +25,7 @@
       if (response.ok) {
         // Request was successful
         const data = await response.json();
-		localStorage.setItem("user", data)
+		localStorage.setItem("user", `${data}`)
 		goto("/chats");
         console.log('Response:', data);
       } else {

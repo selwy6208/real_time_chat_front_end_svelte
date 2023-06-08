@@ -1,6 +1,6 @@
 <script lang="ts">
 	import SignOut from "./SignOut.svelte"
-    import logo from "$lib/assets/logo.png"
+  import logo from "$lib/assets/logo.png"
 </script>
 <header>
     <!-- Navigation bar -->

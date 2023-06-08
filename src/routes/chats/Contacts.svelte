@@ -1,6 +1,16 @@
 <script lang="ts">
   import SignOut from './SignOut.svelte';
   import Contact from './Contact.svelte';
+
+  export let changeChat: Function
+  export let contacts: User[]
+
+  let selectedChat: number
+
+  const changeCurrentChat = (contact:User, index:number) => {
+    console.log(contact)
+    selectedChat = index
+  }
 </script>
 
 <section class="bg-slate-100 shadow shadow-slate-500/40 text-cc-400 flex flex-col col-span-1 lg:col-span-2 xl:col-span-1 h-auto">
@@ -19,6 +29,17 @@
             </a>
         </li>
     </ul>
+  </div>
+  <div class="space-y-2 py-0.5 lg:py-4 flex-1 overflow-y-scroll">
+    {#each contacts as contact, index}
+      <div
+        class={`flex items-center justify-center lg:justify-start space-x-4 hover:bg-cc-100 dark:hover:bg-neutral-900 cursor-pointer lg:px-8 py-4 
+        ${selectedChat === index ? 'border-l-4 border-cc-400 bg-cc-100 dark:border-violet-600 dark:bg-neutral-900 rounded-r-sm' : ''}`}
+        on:keypress={() => changeCurrentChat(contact, index)}
+      >
+        <!-- <Contact {user}={contact} /> -->
+      </div>
+    {/each}
   </div>
   <div class="flex items-center justify-center lg:justify-start space-x-4 hover:bg-cc-100 dark:hover:bg-neutral-900 cursor-pointer lg:px-8 py-4">
     <Contact />

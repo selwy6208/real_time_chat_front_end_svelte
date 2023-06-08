@@ -6,10 +6,22 @@
     import ChatContainer from "./ChatContainer.svelte"
     import Header from "./Header.svelte"
 	import Welcome from "./Welcome.svelte";
+	import { faGlassMartiniAlt } from "@fortawesome/free-solid-svg-icons";
 
-    let contacts = []
+    let contacts: User[] = [
+        {
+            id: 1,
+            userName: "shengwu",
+            email: "shengwu@gmail.com"
+        },
+        {
+            id: 2,
+            userName: "steven",
+            email: "st@gmail.com"
+        },
+    ]
     let currentChat: any
-    let currentUser: any
+    let currentUser: string | null
 
     const handleChatChange = (chat: any) => {
         currentChat = chat
@@ -41,7 +53,7 @@
 <div>
     <Header />
     <div class="grid grid-cols-4 h-auto bg-cc-100 dark:bg-neutral-900 ">
-        <Contacts changeChat={handleChatChange} />
+        <Contacts changeChat={handleChatChange} contacts={contacts} />
         <main class="col-span-3 lg:col-span-2 xl:col-span-3">
             <!-- {#if currentChat === undefined} 
                 <Welcome username={currentUser?.username} />
