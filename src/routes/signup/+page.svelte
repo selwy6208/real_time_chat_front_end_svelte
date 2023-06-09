@@ -1,39 +1,36 @@
 <script lang="ts">
-	import { faWarning } from "@fortawesome/free-solid-svg-icons";
-	import Fa from "svelte-fa";
-	import type { ActionData } from "./$types";
-	import { goto } from "$app/navigation";
+	import axios from "axios";
+	import Fa from "svelte-fa"
+	import type { ActionData } from "./$types"
+	import { goto } from "$app/navigation"
+	import { faWarning } from "@fortawesome/free-solid-svg-icons"
 
-	export let form: ActionData;
+	export let form: ActionData
 
 	let formData = {
+		firstName: '',
+		lastName: '',
 		email: '',
 		password: '',
 		confirmPassword: ''
-  	};
+  	}
 
   async function handleSubmit() {
     try {
-      const response = await fetch('/api/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      });
+		const response = await axios.post("http://localhost:8080/api/register", formData)
 
-      if (response.ok) {
-        // Request was successful
-        const data = await response.json();
-		localStorage.setItem("user", `${data}`)
-		goto("/chats");
-        console.log('Response:', data);
-      } else {
-        // Request failed
-        console.error('Error:', response.statusText);
-      }
+		if (response.status === 200) {
+			// Request was successful
+			const data = await response.data
+			localStorage.setItem("user", `${data}`)
+			goto("/chats")
+			console.log('Response:', data)
+		} else {
+			// Request failed
+			console.error('Error:', response.statusText)
+		}
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error:', error)
     }
   }
 </script>
@@ -61,6 +58,26 @@
 				</div>
 			</div>
 		{/if}
+		<p>
+			<input
+				type="firstName"
+				name="firstName"
+				placeholder="FirstName"
+				class="input input-bordered w-full"
+				required
+				bind:value={formData.firstName}
+			/>
+		</p>
+		<p>
+			<input
+				type="lastName"
+				name="lastName"
+				placeholder="LastName"
+				class="input input-bordered w-full"
+				required
+				bind:value={formData.lastName}
+			/>
+		</p>
 		<p>
 			<input
 				type="email"

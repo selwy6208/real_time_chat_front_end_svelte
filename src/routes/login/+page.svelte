@@ -4,6 +4,7 @@
 
 	import type { ActionData } from "./$types";
 	import { goto } from "$app/navigation";
+	import axios from "axios";
 
 	export let form: ActionData;
 
@@ -12,30 +13,25 @@
 		password: '',
   	};
 
-  async function handleSubmit() {
-    try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      });
+	  async function handleSubmit() {
+		try {
+			const response = await axios.post("http://localhost:8080/api/login", formData);
 
-      if (response.ok) {
-        // Request was successful
-        const data = await response.json();
-		localStorage.setItem("user", `${data}`)
-		goto("/chats");
-        console.log('Response:', data);
-      } else {
-        // Request failed
-        console.error('Error:', response.statusText);
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  }
+			if (response.status === 200) {
+				// Request was successful
+				const data = response.data;
+				localStorage.setItem("user", JSON.stringify(data));
+				goto("/chats");
+				console.log('Response:', data);
+			} else {
+				// Request failed
+				console.error('Error:', response.statusText);
+			}
+		} catch (error) {
+			console.error('Error:', error);
+		}
+	}
+
 
 </script>
 
@@ -70,7 +66,7 @@
 				placeholder="Email..."
 				class="input input-bordered w-full"
 				required
-				value={form?.email ?? ""}
+				bind:value={formData.email}
 			/>
 		</p>
 		<p>
@@ -81,6 +77,7 @@
 				placeholder="Password..."
 				class="input input-bordered w-full"
 				required
+				bind:value={formData.password}
 			/>
 		</p>
 		<p class="flex items-center gap-6 mt-6">
