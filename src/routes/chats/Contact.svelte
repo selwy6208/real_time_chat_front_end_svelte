@@ -11,9 +11,8 @@
             <div class="w-4 aspect-square rounded-full bg-green-500 absolute right-0 bottom-0 border-2 border-cc-200 dark:border-neutral-800"></div>
             )} -->
             <div class="hidden lg:block leading-relaxed">
-                <h1>{contact.userName}</h1>
-                  <!--   <${user?.avatarImage}`}
-                <p>{user?.email}</p> -->
+                <p class="text-2xl font-medium text-gray-500">{contact.firstname} {contact.lastname}</p>
+                  <!--   <${user?.avatarImage}`}-->
     </div>
 </div>
   
