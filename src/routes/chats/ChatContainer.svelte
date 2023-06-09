@@ -70,7 +70,7 @@
     {#if messages?.length > 0}
       {#each messages as message}
         <div
-          class={`flex ${
+          class={`flex h-[17rem] ${
             message.fromSelf ? `justify-end` : `justify-start`
           }`}
         >
