@@ -13,16 +13,15 @@
 		password: '',
   	};
 
-	  async function handleSubmit() {
+	async function handleSubmit() {
 		try {
 			const response = await axios.post("http://localhost:8080/api/login", formData);
 
 			if (response.status === 200) {
 				// Request was successful
 				const data = response.data;
-				localStorage.setItem("user", JSON.stringify(data));
+				localStorage.setItem("token", `${data.token}`)
 				goto("/chats");
-				console.log('Response:', data);
 			} else {
 				// Request failed
 				console.error('Error:', response.statusText);
@@ -31,8 +30,6 @@
 			console.error('Error:', error);
 		}
 	}
-
-
 </script>
 
 <section class="max-w-sm mx-auto mt-56">

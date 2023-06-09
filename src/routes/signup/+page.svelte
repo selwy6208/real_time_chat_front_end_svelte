@@ -22,9 +22,8 @@
 		if (response.status === 200) {
 			// Request was successful
 			const data = await response.data
-			localStorage.setItem("user", `${data}`)
+			localStorage.setItem("token", `${data.token}`)
 			goto("/chats")
-			console.log('Response:', data)
 		} else {
 			// Request failed
 			console.error('Error:', response.statusText)

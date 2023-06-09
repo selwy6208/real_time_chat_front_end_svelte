@@ -1,7 +1,12 @@
 interface User {
-    id: number
-    userName: string
+    ID: number
+    firstname: string
+    lastname: string
     email: string
+    password: string
+    CreatedAt: string
+    UpdatedAt: string
+    DeletedAt: string | null
 }
 
 interface Chat {

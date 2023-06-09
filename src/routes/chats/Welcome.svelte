@@ -1,14 +1,9 @@
 
 <script lang="ts">
-    let username: any
+    export let firstName: string
+    export let lastName: string
 </script>
 
-<section class="grid place-content-center h-screen text-center space-y-2 px-8">
-    <h1>Welcome {username}, to chat.asity.tech</h1>
-    <p>
-    Powered by{" "}
-    <a href="http://asity.tech" target="_blank">
-        asity.tech
-    </a>
-    </p>
+<section class="grid place-content-center h-screen text-center text-2xl space-y-2 px-8">
+    <h1>Welcome {firstName} {lastName}, Please chat with members!</h1>
 </section>
