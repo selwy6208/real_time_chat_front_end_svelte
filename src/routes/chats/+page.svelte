@@ -7,14 +7,19 @@
     import ChatContainer from "./ChatContainer.svelte"
     import Header from "./Header.svelte"
     import Welcome from "./Welcome.svelte"
+	import { changeChat } from "$lib/store/contact.store";
 
     let contacts: User[] = [] // Initialize contacts as an empty array
-    let currentChat: Chat // Use the Chat type and set it as undefined initially
+    export let currentChatUser: User // Use the Chat type and set it as undefined initially
     let currentUser: User // Use the User type and set it as undefined initially
 
-    const handleChatChange = (chat: Chat) => {
-        currentChat = chat
-    }
+    // const handleChatChange = (chat: Chat) => {
+    //     currentChat = chat
+    // }
+
+    changeChat.subscribe(value => {
+        currentChatUser = value
+    })
 
     /* get user info from the backend */
     onMount(async () => {
@@ -73,16 +78,15 @@
     })
 </script>
 
-<div>
-    <Header />
-    <div class="grid grid-cols-4 h-auto bg-cc-100 dark:bg-neutral-900 ">
-        <Contacts changeChat={handleChatChange} contacts={contacts} />
-        <main class="col-span-3 lg:col-span-2 xl:col-span-3">
-            <!-- {#if currentChat === undefined} 
-                <Welcome firstName={currentUser?.firstname} lastName={currentUser?.lastname} />
-            {:else}  -->
-            <ChatContainer currentUser={currentUser} currentChat={currentChat} />
-            <!-- {/if} -->
-        </main>
-    </div>
+<Header />
+<div class="grid grid-cols-4 h-[calc(100vh-65px)] bg-cc-100 dark:bg-neutral-900 ">
+    <!-- <Contacts changeChat={handleChatChange} contacts={contacts} /> -->
+    <Contacts contacts={contacts} />
+    <main class="col-span-3 lg:col-span-2 xl:col-span-3">
+        <!-- {#if currentChat === undefined} 
+            <Welcome firstName={currentUser?.firstname} lastName={currentUser?.lastname} />
+        {:else}  -->
+        <ChatContainer currentUser={currentUser} currentChatUser={currentChatUser} />
+        <!-- {/if} -->
+    </main>
 </div>

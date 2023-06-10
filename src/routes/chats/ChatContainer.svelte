@@ -16,8 +16,7 @@
     UpdatedAt: "",
     DeletedAt: ""
   }
-  export let currentChat:Chat
-
+  export let currentChatUser: User
   let messages: any[] = [
     // {
     //   fromSelf: "abcd",
@@ -28,47 +27,50 @@
     //   message: "Hello, Nice to meet you!"
     // }
   ]
-
+    
   let formData = {
-    messageToSend: "aa"
+    message: "",
+    from: currentUser.ID,
+    to: currentChatUser.ID
   };
 
   let socket: any
-  const websocketUrl = "ws://localhost:8080/api/ws";
 
-  socket = new WebSocket(websocketUrl);
+  onMount(() => {
+    socket = new WebSocket("ws://localhost:8080/api/ws")
 
-  socket.onopen = () => {
-    console.log("WebSocket connection established!");
+    socket.onopen = () => {
+      console.log("WebSocket connection established!")
+    };
+
+    socket.onmessage = (event: any) => {
+      console.log("Received message:", event.data);
+      // Handle the received message from the server
+    };
+
+    socket.onerror = (error: any) => {
+      console.error("WebSocket error:", error);
+    }
+
+    socket.onclose = (event: any) => {
+      console.log("WebSocket connection closed with code:", event.code)
+    }
+  })
+
+  const handleFormSubmit = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    socket.send(JSON.stringify(formData))
+    // await axios.post("api/sendMessage", {
+    //   from: currentUser.ID,
+    //   to: currentChat,
+    //   message: formData.messageToSend,
+    // });
+
+    // const msgs = [...messages];
+    // msgs.push({ fromSelf: true, message: formData.messageToSend });
+    // messages = msgs;
+    // formData.messageToSend = "";
   };
-
-  socket.onmessage = (event: any) => {
-    console.log("Received message:", event.data);
-    // Handle the received message from the server
-  };
-
-  socket.onerror = (error: any) => {
-    console.error("WebSocket error:", error);
-  };
-
-  socket.onclose = (event: any) => {
-    console.log("WebSocket connection closed with code:", event.code);
-  };
-
-  // const handleFormSubmit = async (e: { preventDefault: () => void; }) => {
-  //   e.preventDefault();
-
-  //   await axios.post("api/sendMessage", {
-  //     from: currentUser.ID,
-  //     to: currentChat,
-  //     message: formData.messageToSend,
-  //   });
-
-  //   const msgs = [...messages];
-  //   msgs.push({ fromSelf: true, message: formData.messageToSend });
-  //   messages = msgs;
-  //   formData.messageToSend = "";
-  // };
   
   /* get chat history from the backend */
   onMount(async () => {
@@ -97,7 +99,7 @@
       <h1>{currentUser.firstname} {currentUser.lastname}</h1>
   </div>
   <!-- chat screen -->
-  <div class="p-8 flex-1 h-auto overflow-y-scroll space-y-2 bg-zinc-200">
+  <div class="p-8 flex flex-col flex-1 overflow-y-scroll space-y-2 bg-zinc-200">
     {#if messages?.length > 0}
       {#each messages as message}
         <div
@@ -123,7 +125,7 @@
         </div>
       {/each}
     {:else}
-      <div class="grid place-content-center h-[38rem] text-center space-y-2 px-8">
+      <div class="grid place-content-center flex-1 text-center space-y-2 px-8">
         <h1> 
             <!-- {currentUser?.username},  -->
             let's chat...
@@ -137,21 +139,21 @@
 
     <!-- chat input -->
     <form
-      class="absolute bottom-0 rounded-[20px] bg-white px-3 py-4 flex items-center sticky"
+      on:submit|preventDefault={handleFormSubmit}
+      class="rounded-[20px] bg-white px-3 py-4 flex items-center sticky"
     >
       <div class="icon-style">
         <EmojiMultiple />
       </div>
       <textarea
         name="message"
-        bind:value={formData.messageToSend}
+        bind:value={formData.message}
         placeholder="type you message here..."
-        class="input input-bordered bg-transparent w-full mx-2 text-cc-400 dark:text-white"
+        class="resize-y overflow-hidden h-auto input input-bordered bg-transparent w-full mx-2 text-cc-400 dark:text-white"
       />
       <button class="icon-style">
         <Send />
       </button>
     </form>
   </div>
-  
 </section>

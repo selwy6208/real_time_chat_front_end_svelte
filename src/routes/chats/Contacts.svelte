@@ -1,16 +1,20 @@
 <script lang="ts">
-  import SignOut from './SignOut.svelte';
-  import Contact from './Contact.svelte';
+  import SignOut from './SignOut.svelte'
+  import Contact from './Contact.svelte'
+	import { changeChat } from '$lib/store/contact.store'
 
-  export let changeChat: Function;
+  // export let changeChat: Function;
   export let contacts: User[];
 
   let selectedChat: number;
-
+  // const changeCurrentChat = (contact: User, index: number) => {
+  //   changeChat(contact)
+  //   selectedChat = index
+  // }
   const changeCurrentChat = (contact: User, index: number) => {
-    changeChat(contact);
-    selectedChat = index;
-  };
+    changeChat.set(contact)
+    selectedChat = index
+  }
 </script>
 
 <section class="bg-slate-100 shadow shadow-slate-500/40 text-cc-400 flex flex-col col-span-1 lg:col-span-2 xl:col-span-1 h-auto">
