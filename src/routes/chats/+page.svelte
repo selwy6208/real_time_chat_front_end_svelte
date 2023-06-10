@@ -73,17 +73,16 @@
     })
 </script>
 
-
 <div>
     <Header />
     <div class="grid grid-cols-4 h-auto bg-cc-100 dark:bg-neutral-900 ">
         <Contacts changeChat={handleChatChange} contacts={contacts} />
         <main class="col-span-3 lg:col-span-2 xl:col-span-3">
-            {#if currentChat === undefined} 
+            <!-- {#if currentChat === undefined} 
                 <Welcome firstName={currentUser?.firstname} lastName={currentUser?.lastname} />
-            {:else} 
+            {:else}  -->
             <ChatContainer currentUser={currentUser} currentChat={currentChat} />
-            {/if}
+            <!-- {/if} -->
         </main>
     </div>
 </div>

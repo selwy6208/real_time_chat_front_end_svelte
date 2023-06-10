@@ -6,64 +6,95 @@
   import EmojiMultiple from "../../components/EmojiMultiple.svelte"
   import Send from "../../components/Send.svelte"
 
-  export let currentUser:User
+  export let currentUser:User = {
+    ID: 0,
+    firstname: "",
+    lastname: "",
+    email: "",
+    password: "",
+    CreatedAt: "",
+    UpdatedAt: "",
+    DeletedAt: ""
+  }
   export let currentChat:Chat
 
   let messages: any[] = [
-    {
-      fromSelf: "abcd",
-      message: "Hello, how are you?"
-    },
-    {
-      fromSelf: "ABCD",
-      message: "Hello, Nice to meet you!"
-    }
+    // {
+    //   fromSelf: "abcd",
+    //   message: "Hello, how are you?"
+    // },
+    // {
+    //   fromSelf: "ABCD",
+    //   message: "Hello, Nice to meet you!"
+    // }
   ]
 
   let formData = {
     messageToSend: "aa"
-  }
-
-  const handleFormSubmit = async (e: { preventDefault: () => void; }) => {
-    e.preventDefault();
-
-    await axios.post("api/sendMessage", {
-      from: currentUser?.id,
-      to: currentChat?.id,
-      message: formData.messageToSend,
-    });
-
-    const msgs = [...messages];
-    msgs.push({ fromSelf: true, message: formData.messageToSend });
-    messages = msgs;
-    formData.messageToSend = "";
   };
+
+  let socket: any
+  const websocketUrl = "ws://localhost:8080/api/ws";
+
+  socket = new WebSocket(websocketUrl);
+
+  socket.onopen = () => {
+    console.log("WebSocket connection established!");
+  };
+
+  socket.onmessage = (event: any) => {
+    console.log("Received message:", event.data);
+    // Handle the received message from the server
+  };
+
+  socket.onerror = (error: any) => {
+    console.error("WebSocket error:", error);
+  };
+
+  socket.onclose = (event: any) => {
+    console.log("WebSocket connection closed with code:", event.code);
+  };
+
+  // const handleFormSubmit = async (e: { preventDefault: () => void; }) => {
+  //   e.preventDefault();
+
+  //   await axios.post("api/sendMessage", {
+  //     from: currentUser.ID,
+  //     to: currentChat,
+  //     message: formData.messageToSend,
+  //   });
+
+  //   const msgs = [...messages];
+  //   msgs.push({ fromSelf: true, message: formData.messageToSend });
+  //   messages = msgs;
+  //   formData.messageToSend = "";
+  // };
   
   /* get chat history from the backend */
   onMount(async () => {
-    const getMessages = async () => {
-      const response = await fetch(`api/getMessages`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          from: currentUser.id,
-          to: currentChat.id
-        })
-      });
-      const data = await response.json();
-      messages = data;
-    };
+    // const getMessages = async () => {
+    //   const response = await fetch(`api/getMessages`, {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify({
+    //       from: currentUser.ID,
+    //       to: currentChat
+    //     })
+    //   });
+    //   const data = await response.json();
+    //   messages = data;
+    // };
 
-    await getMessages();
+    // await getMessages();
   });
 </script>
 
 <section class="static flex flex-col h-full text-cc-400 dark:text-white">
   <!-- header -->
   <div class="py-4 leading-relaxed text-sky-700 text-center border-solid border-grey-100">
-      <h1>{currentUser?.userName}</h1>
+      <h1>{currentUser.firstname} {currentUser.lastname}</h1>
   </div>
   <!-- chat screen -->
   <div class="p-8 flex-1 h-auto overflow-y-scroll space-y-2 bg-zinc-200">
@@ -106,7 +137,6 @@
 
     <!-- chat input -->
     <form
-      on:submit={handleFormSubmit}
       class="absolute bottom-0 rounded-[20px] bg-white px-3 py-4 flex items-center sticky"
     >
       <div class="icon-style">

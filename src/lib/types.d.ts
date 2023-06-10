@@ -13,3 +13,11 @@ interface Chat {
     id: number
     message: string
 }
+
+interface Message {
+    id: number
+    from: string
+    to: string
+    message: string
+    isOnline: boolean
+}
