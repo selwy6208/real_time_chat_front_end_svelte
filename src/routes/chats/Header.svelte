@@ -1,18 +1,30 @@
 <script lang="ts">
-	import SignOut from "./SignOut.svelte"
-  import logo from "$lib/assets/logo.png"
-	import { goto } from "$app/navigation";
+	import { onMount } from "svelte";
+  import logo from "$lib/assets/logo.png";
+  import { goto } from "$app/navigation";
+  import SignOut from "./SignOut.svelte";
 
-  let socket: any
+  let socket: WebSocket | null = null;
 
-  socket = new WebSocket("ws://localhost:8080/api/ws")
+  const initializeSocket = () => {
+    socket = new WebSocket("ws://localhost:8080/api/ws");
+
+    socket.onclose = (event: CloseEvent) => {
+      console.log("WebSocket connection closed with code:", event.code);
+    };
+  };
+
   const signOut = () => {
-    socket.onclose = (event: any) => {
-      console.log("WebSocket connection closed with code:", event.code)
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.close();
     }
-    localStorage.clear()
-    goto("/login")
-  }
+
+    localStorage.clear();
+    goto("/login");
+  };
+
+  // Initialize the socket when the component is mounted
+  onMount(initializeSocket);
 </script>
 <header>
     <!-- Navigation bar -->
