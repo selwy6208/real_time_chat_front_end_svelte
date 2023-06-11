@@ -50,16 +50,14 @@
   })
 
   const handleFormSubmit = async (e: Event) => {
-    e.preventDefault();
-
-    socket.send(JSON.stringify(formData));
-    const token = localStorage.getItem("token");
+    e.preventDefault()
+    socket.send(JSON.stringify(formData))
+    const token = localStorage.getItem("token")
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    };
-
+    }
     try {
       await axios.post(
         "http://localhost:8080/api/saveMessage",

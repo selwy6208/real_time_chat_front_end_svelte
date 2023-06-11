@@ -83,10 +83,10 @@
     <!-- <Contacts changeChat={handleChatChange} contacts={contacts} /> -->
     <Contacts contacts={contacts} />
     <main class="col-span-3 lg:col-span-2 xl:col-span-3">
-        <!-- {#if currentChat === undefined} 
+        {#if !currentChatUser.ID } 
             <Welcome firstName={currentUser?.firstname} lastName={currentUser?.lastname} />
-        {:else}  -->
+        {:else} 
         <ChatContainer currentUser={currentUser} currentChatUser={currentChatUser} />
-        <!-- {/if} -->
+        {/if}
     </main>
 </div>
