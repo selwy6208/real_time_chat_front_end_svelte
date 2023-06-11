@@ -1,6 +1,18 @@
 <script lang="ts">
 	import SignOut from "./SignOut.svelte"
   import logo from "$lib/assets/logo.png"
+	import { goto } from "$app/navigation";
+
+  let socket: any
+
+  socket = new WebSocket("ws://localhost:8080/api/ws")
+  const signOut = () => {
+    socket.onclose = (event: any) => {
+      console.log("WebSocket connection closed with code:", event.code)
+    }
+    localStorage.clear()
+    goto("/login")
+  }
 </script>
 <header>
     <!-- Navigation bar -->
@@ -13,7 +25,8 @@
           <img alt="The project logo" src={logo} />
         </div>
         <!-- Navigation links -->
-        <div class="hidden md:block">
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <div class="hidden md:block cursor-pointer" on:click={() => signOut()}>
             <SignOut />
         </div>
       </div>

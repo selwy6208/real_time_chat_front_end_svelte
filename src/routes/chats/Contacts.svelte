@@ -38,7 +38,7 @@
     {#each contacts as contact, index}
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div
-        class={`flex items-center justify-center lg:justify-start hover:bg-cc-100 bg-gray-200 cursor-pointer lg:px-8 
+        class={`flex items-center justify-center lg:justify-start hover:bg-sky-200 cursor-pointer lg:px-8 
         ${selectedChat === index && 'border-l-4 border-cc-400 bg-sky-200 dark:border-violet-600 dark:bg-neutral-900 rounded-r-sm'}`}
         on:click={() => changeCurrentChat(contact, index)}
       >

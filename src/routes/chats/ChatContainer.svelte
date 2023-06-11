@@ -73,7 +73,7 @@
 
       // If the request is successful, you can proceed with updating the messages
       const msgs = [...messages];
-      msgs.push({ sender: currentUser.firstname + currentUser.lastname, message: formData.content })
+      msgs.push({ sender: currentUser.firstname + ' ' + currentUser.lastname, message: formData.content })
       messages = msgs
       formData.content = ""
     } catch (error) {
@@ -114,7 +114,7 @@
 
 <section class="static flex flex-col items-center h-full text-cc-400 dark:text-white">
   <!-- header -->
-  <div class="py-4 leading-relaxed text-sky-700 text-center border-solid border-grey-100">
+  <div class="py-4 leading-relaxed text-sky-700 text-center font-bold text-2xl border-solid border-grey-100">
       <h1>{currentUser.firstname} {currentUser.lastname}</h1>
   </div>
   <!-- chat screen -->
@@ -129,11 +129,15 @@
               </div>
               <Time timestamp="{new Date()}" format="dddd @ h:mm a" />
             </div>
-            <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
+            <div class="flex justify-center items-center flex-shrink-0 h-10 w-10 text-2xl font-bold text-gray-500 rounded-full bg-gray-300">
+              {message.sender.split(' ')[0].charAt(0)}{message.sender.split(' ')[1].charAt(0)}
+            </div>
           </div>
           {:else}
           <div class="flex w-full mt-2 space-x-3 max-w-xs justify-start">
-            <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
+            <div class="flex justify-center items-center flex-shrink-0 h-10 w-10 text-2xl font-bold text-gray-500 rounded-full bg-gray-300">
+              {message.sender.split(' ')[0].charAt(0)}{message.sender.split(' ')[1].charAt(0)}
+            </div>
             <div>
               <div class="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
                 <p class="text-sm">{message.message}</p>
