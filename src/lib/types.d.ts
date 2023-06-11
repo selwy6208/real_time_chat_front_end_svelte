@@ -15,9 +15,6 @@ interface Chat {
 }
 
 interface Message {
-    id: number
-    from: string
-    to: string
+    sender: string
     message: string
-    isOnline: boolean
 }
