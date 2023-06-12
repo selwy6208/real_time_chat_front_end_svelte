@@ -14,15 +14,18 @@ npm create svelte@latest
 npm create svelte@latest my-app
 ```
 
-## Developing
+## Getting Started
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+1. In the root directory, please run 
 
-```bash
+```
+npm install (or `pnpm install` or `yarn`)
+```
+
+2. Run 
+
+```
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
 
 ## Building
