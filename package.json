@@ -42,6 +42,7 @@
 		"daisyui": "^3.0.3",
 		"debug": "^4.3.4",
 		"svelte-fa": "^3.0.4",
+		"svelte-navigator": "^3.2.2",
 		"svelte-time": "^0.7.2"
 	}
 }

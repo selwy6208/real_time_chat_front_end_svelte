@@ -6,7 +6,9 @@ interface User {
     password: string
     CreatedAt: string
     UpdatedAt: string
-    DeletedAt: string | null
+    DeletedAt: string | null,
+    isOnline: boolean,
+    unReadMessage: number
 }
 
 interface Chat {
@@ -16,5 +18,5 @@ interface Chat {
 
 interface Message {
     sender: string
-    message: string
+    content: string
 }

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import axios from "axios";
+	import axios from "axios"
 	import Fa from "svelte-fa"
 	import { goto } from "$app/navigation"
 	import { faWarning } from "@fortawesome/free-solid-svg-icons"
@@ -14,7 +14,7 @@
 		confirmPassword: ''
   	}
 
-  async function handleSubmit() {
+  async function handleSubmit(): Promise<void> {
 	if (formData.password === formData.confirmPassword) {
 		try {
 			const response = await axios.post("http://localhost:8080/api/register", formData)

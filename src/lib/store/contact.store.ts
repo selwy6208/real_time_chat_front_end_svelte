@@ -8,5 +8,7 @@ export const changeChat: Writable<User> = writable({
     password: "",
     CreatedAt: "",
     UpdatedAt: "",
-    DeletedAt: ""
+    DeletedAt: "",
+    isOnline: false,
+    unReadMessage: 0
 })
