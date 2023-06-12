@@ -141,27 +141,27 @@
             console.log("WebSocket connection closed with code:", event.code)
         }
     }
-const fetchUserDetails  = async (newConnectUserID: string) => {
-    const token = localStorage.getItem("token");
-    const config = {
-        headers: {
-            Authorization: `Bearer ${token}`
+    const fetchUserDetails  = async (newConnectUserID: string) => {
+        const token = localStorage.getItem("token");
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         }
-    }
-    try {
-        const response = await axios.get("http://localhost:8080/api/getUserDetails?userID=" + newConnectUserID, config)
+        try {
+            const response = await axios.get("http://localhost:8080/api/getUserDetails?userID=" + newConnectUserID, config)
 
-        if (response.status === 200) {
-            const data = response.data.data
-            contacts.push(data)
-        } else {
-            // Request failed
-            console.error('Error:', response.statusText)
+            if (response.status === 200) {
+                const data = response.data.data
+                contacts.push(data)
+            } else {
+                // Request failed
+                console.error('Error:', response.statusText)
+            }
+        } catch (error) {
+            console.error('Error:', error)
         }
-    } catch (error) {
-        console.error('Error:', error)
     }
-}
 </script>
 
 <Header />

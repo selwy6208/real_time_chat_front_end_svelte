@@ -101,7 +101,7 @@
         {#if message.sender ==  `${currentChatUser.ID}`}
           <div class="flex w-full mt-2 space-x-3 max-w-xs justify-start">
             <div class="flex justify-center items-center flex-shrink-0 h-10 w-10 text-2xl font-bold text-white rounded-full bg-gray-400">
-              {currentUser.firstname.charAt(0)}{currentUser.lastname.charAt(0)}
+              {currentChatUser.firstname.charAt(0)}{currentChatUser.lastname.charAt(0)}
             </div>
             <div>
               <div class="bg-sky-300 p-3 rounded-r-lg rounded-bl-lg text-gray-700">
@@ -119,7 +119,7 @@
               <Time class="text-gray-500" timestamp="{new Date()}" format="dddd @ h:mm a" />
             </div>
             <div class="flex justify-center items-center flex-shrink-0 h-10 w-10 text-2xl font-bold text-white rounded-full bg-gray-400">
-              {currentChatUser.firstname.charAt(0)}{currentChatUser.lastname.charAt(0)}
+              {currentUser.firstname.charAt(0)}{currentUser.lastname.charAt(0)}
             </div>
           </div>
         {/if}
