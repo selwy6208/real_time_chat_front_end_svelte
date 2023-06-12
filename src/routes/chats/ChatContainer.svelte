@@ -1,127 +1,154 @@
 <script lang="ts">
-  import { onMount } from "svelte"
   import axios from "axios"
-
-  import Contact from "./Contact.svelte"
-  import EmojiMultiple from "../../components/EmojiMultiple.svelte"
+  import Time from "svelte-time"
+  
   import Send from "../../components/Send.svelte"
 
-  export let currentUser:User
-  export let currentChat:Chat
-
-  let messages: any[] = [
-    {
-      fromSelf: "abcd",
-      message: "Hello, how are you?"
-    },
-    {
-      fromSelf: "ABCD",
-      message: "Hello, Nice to meet you!"
-    }
-  ]
-
-  let formData = {
-    messageToSend: "aa"
+  export let socket: WebSocket
+  export let currentUser: User = {
+    ID: 0,
+    firstname: "",
+    lastname: "",
+    email: "",
+    password: "",
+    CreatedAt: "",
+    UpdatedAt: "",
+    DeletedAt: "",
+    isOnline: false,
+    unReadMessage: 0
   }
 
-  const handleFormSubmit = async (e: { preventDefault: () => void; }) => {
-    e.preventDefault();
-
-    await axios.post("api/sendMessage", {
-      from: currentUser?.id,
-      to: currentChat?.id,
-      message: formData.messageToSend,
-    });
-
+  export const onNewMessage  = (messageData: any) =>{
+    console.log("New Message Arrives")
     const msgs = [...messages];
-    msgs.push({ fromSelf: true, message: formData.messageToSend });
-    messages = msgs;
-    formData.messageToSend = "";
-  };
-  
-  /* get chat history from the backend */
-  onMount(async () => {
-    const getMessages = async () => {
-      const response = await fetch(`api/getMessages`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          from: currentUser.id,
-          to: currentChat.id
-        })
-      });
-      const data = await response.json();
-      messages = data;
-    };
+    msgs.push(messageData)
+    messages = msgs
+  }
+  export let currentChatUser: User
 
-    await getMessages();
-  });
+  let messages: Message[] = []
+  let formData = {
+    content: "",
+    sender: `${currentUser.ID}`,
+    recipient: `${currentChatUser.ID}`
+  };
+
+  const handleKeyPress = (event: any) => {
+    if (event.key === "Enter") {
+      if (formData.content) {
+        const messageStr = JSON.stringify({message_type: "new_message", message_data: JSON.stringify(formData)})
+        const msgs = [...messages];
+        msgs.push({ sender: `${currentUser.ID}`, content: formData.content})
+        messages = msgs
+        formData.content = ""
+        socket.send(messageStr)
+      }
+    }
+  }
+
+  const handleFormSubmit = async (e: Event) => {
+    e.preventDefault()
+    if (formData.content) {
+      const messageStr = JSON.stringify({message_type: "new_message", message_data: JSON.stringify(formData)})
+      const msgs = [...messages];
+      msgs.push({ sender: `${currentUser.ID}`, content: formData.content})
+      messages = msgs
+      formData.content = ""
+      socket.send(messageStr)
+    }
+  }
+
+  const fetchData = async () => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+    try {
+      if (currentChatUser.ID) {
+        const response = await axios.post(
+          "http://localhost:8080/api/getMessage",
+          {
+            chat_user_id: currentChatUser.ID
+          },
+          config 
+        );
+        const data = response.data.data
+        messages = data
+        console.log(data, "get message testing")
+      }
+    } catch (error) {
+      console.error("Error getting messages:", error);
+    }
+  }
+
+  // Run fetchData when currentChatUser changes
+  $: {
+    fetchData();
+  }
 </script>
 
-<section class="static flex flex-col h-full text-cc-400 dark:text-white">
+<section class="flex flex-col items-center h-full text-cc-400 dark:text-white bg-white rounded-2xl">
   <!-- header -->
-  <div class="py-4 leading-relaxed text-sky-700 text-center border-solid border-grey-100">
-      <h1>{currentUser?.userName}</h1>
+  <div class="py-4 leading-relaxed text-sky-700 text-center font-bold text-2xl border-solid border-grey-100">
+      <h1>{currentChatUser.firstname} {currentChatUser.lastname}</h1>
   </div>
   <!-- chat screen -->
-  <div class="p-8 flex-1 h-auto overflow-y-scroll space-y-2 bg-zinc-200">
+  <div class="w-full h-[calc(100vh-265px)] overflow-auto px-20 bg-gray-100">
     {#if messages?.length > 0}
       {#each messages as message}
-        <div
-          class={`flex ${
-            message.fromSelf ? `justify-end` : `justify-start`
-          }`}
-        >
-          <div class="flex flex-col items-end leading-relaxed space-y-2">
-            <div
-              class={`max-w-4xl px-4 py-2 rounded-sm dark:text-white ${
-                message.fromSelf
-                  ? `bg-cc-200 dark:bg-neutral-800`
-                  : `bg-cc-400 text-cc-100 dark:bg-violet-600 `
-              }`}>
-              <h2>{message.message}</h2>
+        {#if message.sender ==  `${currentChatUser.ID}`}
+          <div class="flex w-full mt-2 space-x-3 max-w-xs justify-start">
+            <div class="flex justify-center items-center flex-shrink-0 h-10 w-10 text-2xl font-bold text-white rounded-full bg-gray-400">
+              {currentUser.firstname.charAt(0)}{currentUser.lastname.charAt(0)}
             </div>
-            <span class="text-xs text-cc-400 dark:text-gray-400">
-              <!-- {format(message.createdAt)}
-               ref={scrollRef}
-                key={uuidv4()} -->
-            </span>
+            <div>
+              <div class="bg-sky-300 p-3 rounded-r-lg rounded-bl-lg text-gray-700">
+                <p class="text-sm">{message.content}</p>
+              </div>
+              <Time class="text-gray-500" timestamp="{new Date()}" format="dddd @ h:mm a" />
+            </div>
           </div>
-        </div>
+          {:else}
+          <div class="flex w-full mt-2 space-x-3 max-w-xs ml-auto justify-end">
+            <div>
+              <div class="bg-blue-400 p-3 rounded-l-lg rounded-br-lg">
+                <p class="text-sm">{message.content}</p>
+              </div>
+              <Time class="text-gray-500" timestamp="{new Date()}" format="dddd @ h:mm a" />
+            </div>
+            <div class="flex justify-center items-center flex-shrink-0 h-10 w-10 text-2xl font-bold text-white rounded-full bg-gray-400">
+              {currentChatUser.firstname.charAt(0)}{currentChatUser.lastname.charAt(0)}
+            </div>
+          </div>
+        {/if}
       {/each}
     {:else}
-      <div class="grid place-content-center h-[38rem] text-center space-y-2 px-8">
+      <div class="grid place-content-center flex-1 text-center space-y-2 px-8 text-gray-700">
         <h1> 
-            <!-- {currentUser?.username},  -->
             let's chat...
         </h1>
         <p>
           No messages yet. Start by sending a message
-            <!-- {currentChat?.username} -->
         </p>
       </div>
     {/if}
-
-    <!-- chat input -->
-    <form
-      on:submit={handleFormSubmit}
-      class="absolute bottom-0 rounded-[20px] bg-white px-3 py-4 flex items-center sticky"
-    >
-      <div class="icon-style">
-        <EmojiMultiple />
-      </div>
-      <textarea
-        name="message"
-        bind:value={formData.messageToSend}
-        placeholder="type you message here..."
-        class="input input-bordered bg-transparent w-full mx-2 text-cc-400 dark:text-white"
-      />
-      <button class="icon-style">
-        <Send />
-      </button>
-    </form>
   </div>
-  
+    <!-- chat input -->
+  <form
+    on:submit|preventDefault={handleFormSubmit}
+    class="absolute bottom-10 rounded-[20px] bg-gray-400 px-3 py-4 flex items-center w-[60%]"
+  >
+    <textarea
+      name="message"
+      bind:value={formData.content}
+      on:keydown={handleKeyPress}
+      placeholder="type you message here..."
+      class="resize-y overflow-hidden h-auto input input-bordered bg-transpare w-full mx-2 text-gray-700 bg-white"
+    />
+    <button class="icon-style">
+      <Send />
+    </button>
+  </form>
 </section>

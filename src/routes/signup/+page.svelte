@@ -1,40 +1,38 @@
 <script lang="ts">
-	import { faWarning } from "@fortawesome/free-solid-svg-icons";
-	import Fa from "svelte-fa";
-	import type { ActionData } from "./$types";
-	import { goto } from "$app/navigation";
+	import axios from "axios"
+	import Fa from "svelte-fa"
+	import { goto } from "$app/navigation"
+	import { faWarning } from "@fortawesome/free-solid-svg-icons"
 
-	export let form: ActionData;
+	export let errorMessage: string
 
 	let formData = {
+		firstName: '',
+		lastName: '',
 		email: '',
 		password: '',
 		confirmPassword: ''
-  	};
+  	}
 
-  async function handleSubmit() {
-    try {
-      const response = await fetch('/api/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      });
-
-      if (response.ok) {
-        // Request was successful
-        const data = await response.json();
-		localStorage.setItem("user", `${data}`)
-		goto("/chats");
-        console.log('Response:', data);
-      } else {
-        // Request failed
-        console.error('Error:', response.statusText);
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
+  async function handleSubmit(): Promise<void> {
+	if (formData.password === formData.confirmPassword) {
+		try {
+			const response = await axios.post("http://localhost:8080/api/register", formData)
+	
+			if (response.status === 200) {
+				// Request was successful
+				goto("/login")
+			} else {
+				// Request failed
+				errorMessage = response.statusText
+			}
+		} catch (error) {
+			errorMessage = "The Email already exists!"
+		  console.error('Error:', error)
+		}
+	} else {
+		errorMessage = "Please Confirm the Password!"
+	}
   }
 </script>
 
@@ -53,14 +51,34 @@
 		class="flex flex-col gap-6 my-6"
 		on:submit|preventDefault={handleSubmit}
 	>
-		{#if form?.error}
+		{#if errorMessage}
 			<div class="alert alert-error">
 				<div>
 					<Fa icon={faWarning} />
-					{form.error}
+					{errorMessage}
 				</div>
 			</div>
 		{/if}
+		<p>
+			<input
+				type="firstName"
+				name="firstName"
+				placeholder="FirstName"
+				class="input input-bordered w-full"
+				required
+				bind:value={formData.firstName}
+			/>
+		</p>
+		<p>
+			<input
+				type="lastName"
+				name="lastName"
+				placeholder="LastName"
+				class="input input-bordered w-full"
+				required
+				bind:value={formData.lastName}
+			/>
+		</p>
 		<p>
 			<input
 				type="email"

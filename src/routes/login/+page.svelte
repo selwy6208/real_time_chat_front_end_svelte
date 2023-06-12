@@ -1,42 +1,34 @@
 <script lang="ts">
-	import { faWarning } from "@fortawesome/free-solid-svg-icons";
-	import Fa from "svelte-fa";
+	import axios from "axios"
+	import Fa from "svelte-fa"
+	import { goto } from "$app/navigation"
+	import { faWarning } from "@fortawesome/free-solid-svg-icons"
 
-	import type { ActionData } from "./$types";
-	import { goto } from "$app/navigation";
 
-	export let form: ActionData;
+	export let errorMessage: string
 
 	let formData = {
 		email: '',
 		password: '',
-  	};
+  	}
 
-  async function handleSubmit() {
-    try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      });
+	async function handleSubmit(): Promise<void> {
+		try {
+			const response = await axios.post("http://localhost:8080/api/login", formData)
 
-      if (response.ok) {
-        // Request was successful
-        const data = await response.json();
-		localStorage.setItem("user", `${data}`)
-		goto("/chats");
-        console.log('Response:', data);
-      } else {
-        // Request failed
-        console.error('Error:', response.statusText);
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  }
-
+			if (response.status === 200) {
+				// Request was successful
+				const data = response.data;
+				localStorage.setItem("token", `${data.token}`)
+				goto("/chats");
+			} else {
+				// Request failed
+				errorMessage = response.statusText
+			}
+		} catch (error) {
+			errorMessage = "Email or password is incorrect!"
+		}
+	}
 </script>
 
 <section class="max-w-sm mx-auto mt-56">
@@ -44,11 +36,11 @@
 		class="flex flex-col gap-6 my-6"
 		on:submit|preventDefault={handleSubmit}
 	>
-		{#if form?.error}
+		{#if errorMessage}
 			<div class="alert alert-error">
 				<div>
 					<Fa icon={faWarning} />
-					{form.error}
+					{errorMessage}
 				</div>
 			</div>
 		{/if}
@@ -70,7 +62,7 @@
 				placeholder="Email..."
 				class="input input-bordered w-full"
 				required
-				value={form?.email ?? ""}
+				bind:value={formData.email}
 			/>
 		</p>
 		<p>
@@ -81,6 +73,7 @@
 				placeholder="Password..."
 				class="input input-bordered w-full"
 				required
+				bind:value={formData.password}
 			/>
 		</p>
 		<p class="flex items-center gap-6 mt-6">
