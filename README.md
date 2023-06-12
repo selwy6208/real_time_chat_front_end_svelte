@@ -16,15 +16,13 @@ npm create svelte@latest my-app
 
 ## Getting Started
 
-1. Download `.env` File from [this link](https://share.1password.com/s#p9pHwDc16pJFpbSrjDYKILKM49qjKlWcl0qRUJOotHY)
-
-2. In the root directory, please run 
+1. In the root directory, please run 
 
 ```
 npm install (or `pnpm install` or `yarn`)
 ```
 
-3. Run 
+2. Run 
 
 ```
 npm run dev
