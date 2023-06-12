@@ -6,7 +6,7 @@
   import Contact from "./Contact.svelte"
   import EmojiMultiple from "../../components/EmojiMultiple.svelte"
   import Send from "../../components/Send.svelte"
-
+  export let socket: WebSocket
   export let currentUser:User = {
     ID: 0,
     firstname: "",
@@ -22,92 +22,91 @@
     
   let formData = {
     content: "",
-    sender: currentUser.ID,
-    recipient: currentChatUser.ID
+    sender: `${currentUser.ID}`,
+    recipient: `${currentChatUser.ID}`
   };
 
-  let socket: any
-
-  onMount(() => {
-    socket = new WebSocket("ws://localhost:8080/api/ws")
-
-    socket.onopen = () => {
-      console.log("WebSocket connection established!")
-    };
-
-    socket.onmessage = (event: any) => {
-      console.log("Received message:", event.data);
-      // Handle the received message from the server
-    };
-
-    socket.onerror = (error: any) => {
-      console.error("WebSocket error:", error);
-    }
-
-    socket.onclose = (event: any) => {
-      console.log("WebSocket connection closed with code:", event.code)
-    }
-  })
+  
 
   const handleFormSubmit = async (e: Event) => {
     e.preventDefault()
     socket.send(JSON.stringify(formData))
-    const token = localStorage.getItem("token")
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-    try {
-      await axios.post(
-        "http://localhost:8080/api/saveMessage",
-        {
-          sender: currentUser.ID.toString(),
-          recipient: currentChatUser.ID.toString(),
-          content: formData.content,
-        },
-        config // Move the config object to the correct position
-      );
+  }
 
-      // If the request is successful, you can proceed with updating the messages
-      const msgs = [...messages];
-      msgs.push({ sender: currentUser.firstname + ' ' + currentUser.lastname, message: formData.content })
-      messages = msgs
-      formData.content = ""
-    } catch (error) {
-      // Handle the error if the request fails
-      console.error("Error saving message:", error);
-    }
-  };
-  
-  /* get chat history from the backend */
-  onMount(async () => {
+  const fetchData = async () => {
     const token = localStorage.getItem("token");
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     };
-    try {
-      await axios.post(
-        "http://localhost:8080/api/getMessage",
-        {
-          sender: currentUser.ID.toString(),
-          recipient: currentChatUser.ID.toString(),
-        },
-        config // Move the config object to the correct position
-      );
 
-      // If the request is successful, you can proceed with updating the messages
-      // const msgs = [...messages];
-      // msgs.push({ fromSelf: true, message: formData.messageToSend });
-      // messages = msgs;
-      // formData.messageToSend = "";
+    try {
+      if (currentChatUser.ID) {
+        console.log(currentChatUser.ID, "current identify");
+        await axios.post(
+          "http://localhost:8080/api/getMessage",
+          {
+            sender: currentUser.ID.toString(),
+            recipient: currentChatUser.ID.toString(),
+          },
+          config 
+        );
+      }
     } catch (error) {
-      // Handle the error if the request fails
-      console.error("Error get message:", error);
+      console.error("Error getting messages:", error);
     }
-  })
+  }
+
+  // Run fetchData when currentChatUser changes
+  $: {
+    fetchData();
+  }
+
+  onMount(() => {
+    // Perform any other initialization if needed
+    socket.onmessage = (data: any) => {
+        console.log("Received message in Container:", data.data.content)
+
+        //If the request is successful, you can proceed with updating the messages
+        const msgs = [...messages];
+        msgs.push({ sender: data.data.sender, message: data.data.content });
+        messages = msgs
+        formData.content = ""
+    };
+  });
+  
+  /* get chat history from the backend */
+  // onMount(async () => {
+  //   const token = localStorage.getItem("token");
+  //   const config = {
+  //     headers: {
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //   }
+  //   try {
+  //     if (currentChatUser.ID) {
+  //       console.log(currentChatUser.ID, "current identify")
+  //       await axios.post(
+  //         "http://localhost:8080/api/getMessage",
+  //         {
+  //           sender: currentUser.ID.toString(),
+  //           recipient: currentChatUser.ID.toString(),
+  //         },
+  //         config // Move the config object to the correct position
+  //       )
+  
+  //       If the request is successful, you can proceed with updating the messages
+  //       const msgs = [...messages];
+  //       msgs.push({ fromSelf: true, message: formData.messageToSend });
+  //       messages = msgs;
+  //       formData.messageToSend = "";
+  //     }
+  //   } catch (error) {
+  //     // Handle the error if the request fails
+  //     console.error("Error get message:", error);
+  //   }
+  // })
 </script>
 
 <section class="static flex flex-col items-center h-full text-cc-400 dark:text-white">

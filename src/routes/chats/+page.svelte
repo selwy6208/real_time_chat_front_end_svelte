@@ -48,7 +48,8 @@
             }
         }
     })
-
+    let socket: any
+   
     /* If the user info does not exist, redirect to the login page */
     onMount(async () => {
         const token = localStorage.getItem("token");
@@ -67,6 +68,8 @@
                     // Request was successful
                     const data = response.data.data
                     currentUser = data
+
+                    socketInitialize();
                 } else {
                     // Request failed
                     console.error('Error:', response.statusText)
@@ -76,6 +79,25 @@
             }
         }
     })
+    const socketInitialize = () =>{
+        socket = new WebSocket("ws://localhost:8080/api/ws")
+        socket.onopen = () => {
+            console.log("WebSocket connection established!")
+            console.log(currentUser.ID)
+            socket.send(JSON.stringify({message_type: "new_connection", message_data: `${currentUser.ID}`}))
+        };
+        socket.onmessage = (data: any) => {
+            console.log("Received message:", data);
+        };
+
+        socket.onerror = (error: any) => {
+            console.error("WebSocket error:", error);
+        }
+
+        socket.onclose = (event: any) => {
+            console.log("WebSocket connection closed with code:", event.code)
+        }
+    }
 </script>
 
 <Header />
@@ -86,7 +108,7 @@
         {#if !currentChatUser.ID } 
             <Welcome firstName={currentUser?.firstname} lastName={currentUser?.lastname} />
         {:else} 
-        <ChatContainer currentUser={currentUser} currentChatUser={currentChatUser} />
+        <ChatContainer currentUser={currentUser} currentChatUser={currentChatUser} socket = {socket} />
         {/if}
     </main>
 </div>
