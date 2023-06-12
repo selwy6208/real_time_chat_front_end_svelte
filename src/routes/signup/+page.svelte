@@ -1,11 +1,10 @@
 <script lang="ts">
 	import axios from "axios";
 	import Fa from "svelte-fa"
-	import type { ActionData } from "./$types"
 	import { goto } from "$app/navigation"
 	import { faWarning } from "@fortawesome/free-solid-svg-icons"
 
-	export let form: ActionData
+	export let errorMessage: string
 
 	let formData = {
 		firstName: '',
@@ -16,19 +15,24 @@
   	}
 
   async function handleSubmit() {
-    try {
-		const response = await axios.post("http://localhost:8080/api/register", formData)
-
-		if (response.status === 200) {
-			// Request was successful
-			goto("/login")
-		} else {
-			// Request failed
-			console.error('Error:', response.statusText)
+	if (formData.password === formData.confirmPassword) {
+		try {
+			const response = await axios.post("http://localhost:8080/api/register", formData)
+	
+			if (response.status === 200) {
+				// Request was successful
+				goto("/login")
+			} else {
+				// Request failed
+				errorMessage = response.statusText
+			}
+		} catch (error) {
+			errorMessage = "The Email already exists!"
+		  console.error('Error:', error)
 		}
-    } catch (error) {
-      console.error('Error:', error)
-    }
+	} else {
+		errorMessage = "Please Confirm the Password!"
+	}
   }
 </script>
 
@@ -47,11 +51,11 @@
 		class="flex flex-col gap-6 my-6"
 		on:submit|preventDefault={handleSubmit}
 	>
-		{#if form?.error}
+		{#if errorMessage}
 			<div class="alert alert-error">
 				<div>
 					<Fa icon={faWarning} />
-					{form.error}
+					{errorMessage}
 				</div>
 			</div>
 		{/if}

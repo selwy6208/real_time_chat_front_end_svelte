@@ -2,11 +2,10 @@
 	import { faWarning } from "@fortawesome/free-solid-svg-icons";
 	import Fa from "svelte-fa";
 
-	import type { ActionData } from "./$types";
 	import { goto } from "$app/navigation";
 	import axios from "axios";
 
-	export let form: ActionData;
+	export let errorMessage: string
 
 	let formData = {
 		email: '',
@@ -24,10 +23,10 @@
 				goto("/chats");
 			} else {
 				// Request failed
-				console.error('Error:', response.statusText);
+				errorMessage = response.statusText
 			}
 		} catch (error) {
-			console.error('Error:', error);
+			errorMessage = "Email or password is incorrect!"
 		}
 	}
 </script>
@@ -37,11 +36,11 @@
 		class="flex flex-col gap-6 my-6"
 		on:submit|preventDefault={handleSubmit}
 	>
-		{#if form?.error}
+		{#if errorMessage}
 			<div class="alert alert-error">
 				<div>
 					<Fa icon={faWarning} />
-					{form.error}
+					{errorMessage}
 				</div>
 			</div>
 		{/if}
