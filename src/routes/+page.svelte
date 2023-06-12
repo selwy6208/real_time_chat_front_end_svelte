@@ -1,5 +1,6 @@
 <script lang="ts">
 	import axios from "axios"
+	import { onMount } from "svelte";
 	import { goto } from "$app/navigation"
 	import Fa from "svelte-fa"
 	import { faWarning } from "@fortawesome/free-solid-svg-icons";
@@ -28,6 +29,14 @@
       errorMessage = "Email or password is incorrect!"
 		}
 	}
+
+	 /* Redirect if the user is logged in */
+	onMount(async () => {
+        const token = localStorage.getItem("token")
+        if (token) {
+            goto("/chats")
+        } 
+    })
 </script>
 
 <section class="max-w-sm mx-auto mt-56">

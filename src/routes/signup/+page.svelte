@@ -1,7 +1,8 @@
 <script lang="ts">
 	import axios from "axios"
-	import Fa from "svelte-fa"
+	import { onMount } from "svelte";
 	import { goto } from "$app/navigation"
+	import Fa from "svelte-fa"
 	import { faWarning } from "@fortawesome/free-solid-svg-icons"
 
 	export let errorMessage: string
@@ -34,6 +35,14 @@
 		errorMessage = "Please Confirm the Password!"
 	}
   }
+
+   /* Redirect if the user is logged in */
+   	onMount(async () => {
+        const token = localStorage.getItem("token")
+        if (token) {
+            goto("/chats")
+        } 
+	})
 </script>
 
 <section class="max-w-sm mx-auto mt-56">
