@@ -141,37 +141,37 @@
             console.log("WebSocket connection closed with code:", event.code)
         }
     }
-    const fetchUserDetails  = async (newConnectUserID: string) => {
-        const token = localStorage.getItem("token");
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }
-        try {
-            const response = await axios.get("http://localhost:8080/api/getUserDetails?userID=" + newConnectUserID, config)
-
-            if (response.status === 200) {
-                const data = response.data.data
-                contacts.push(data)
-            } else {
-                // Request failed
-                console.error('Error:', response.statusText)
-            }
-        } catch (error) {
-            console.error('Error:', error)
+const fetchUserDetails  = async (newConnectUserID: string) => {
+    const token = localStorage.getItem("token");
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
         }
     }
+    try {
+        const response = await axios.get("http://localhost:8080/api/getUserDetails?userID=" + newConnectUserID, config)
+
+        if (response.status === 200) {
+            const data = response.data.data
+            contacts.push(data)
+        } else {
+            // Request failed
+            console.error('Error:', response.statusText)
+        }
+    } catch (error) {
+        console.error('Error:', error)
+    }
+}
 </script>
 
-<Header />
+<Header currentUser={currentUser} />
 <div class="grid grid-cols-4 h-[calc(100vh-65px)] bg-white">
     <Contacts contacts={contacts} currentUser={currentUser} />
     <main class="col-span-3 lg:col-span-2 xl:col-span-3">
         {#if !currentChatUser.ID } 
             <Welcome firstName={currentUser?.firstname} lastName={currentUser?.lastname} />
         {:else} 
-        <ChatContainer bind:this = {chatContainer} currentUser={currentUser} currentChatUser={currentChatUser} socket = {socket} />
+        <ChatContainer bind:this = {chatContainer} currentUser={currentUser} socket = {socket} />
         {/if}
     </main>
 </div>

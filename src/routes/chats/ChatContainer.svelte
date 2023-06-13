@@ -3,6 +3,7 @@
   import Time from "svelte-time"
   
   import Send from "../../components/Send.svelte"
+	import { changeChat } from "$lib/store/contact.store";
 
   export let socket: WebSocket
   export let currentUser: User = {
@@ -24,17 +25,34 @@
     msgs.push(messageData)
     messages = msgs
   }
-  export let currentChatUser: User
-
-  let messages: Message[] = []
+  let currentChatUser: User = {
+    ID: 0,
+    firstname: "",
+    lastname: "",
+    email: "",
+    password: "",
+    CreatedAt: "",
+    UpdatedAt: "",
+    DeletedAt: "",
+    isOnline: false,
+    unReadMessage: 0
+  }
   let formData = {
     content: "",
     sender: `${currentUser.ID}`,
     recipient: `${currentChatUser.ID}`
-  };
+  }
+
+  changeChat.subscribe(value => {
+      currentChatUser = value
+      formData.recipient = `${value.ID}` // Update formData.recipient when currentChatUser changes
+  })
+
+  let messages: Message[] = []
 
   const handleKeyPress = (event: any) => {
     if (event.key === "Enter") {
+      console.log(formData.recipient, formData.sender, "address testing")
       if (formData.content) {
         const messageStr = JSON.stringify({message_type: "new_message", message_data: JSON.stringify(formData)})
         const msgs = [...messages];
@@ -48,6 +66,7 @@
 
   const handleFormSubmit = async (e: Event) => {
     e.preventDefault()
+    console.log(formData.recipient, formData.sender, "address testing")
     if (formData.content) {
       const messageStr = JSON.stringify({message_type: "new_message", message_data: JSON.stringify(formData)})
       const msgs = [...messages];
@@ -76,7 +95,6 @@
         );
         const data = response.data.data
         messages = data
-        console.log(data, "get message testing")
       }
     } catch (error) {
       console.error("Error getting messages:", error);
@@ -127,7 +145,7 @@
         {/if}
       {/each}
     {:else}
-      <div class="grid place-content-center flex-1 text-center space-y-2 px-8 text-gray-700">
+      <div class="grid place-content-center flex-1 text-center space-y-2 my-2.5 px-8 text-gray-700">
         <h1> 
             let's chat...
         </h1>

@@ -5,7 +5,8 @@
 
   import SignOut from "./SignOut.svelte"
 
-  let socket: WebSocket | null = null;
+  let socket: WebSocket | null = null
+  export let currentUser: User
 
   const initializeSocket = () => {
     socket = new WebSocket("ws://localhost:8080/api/ws");
@@ -38,10 +39,13 @@
           <img alt="The project logo" src={logo} />
         </div>
         <!-- Navigation links -->
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <div class="hidden md:block cursor-pointer" on:click={() => signOut()}>
+        <div class="flex gap-3 font-bold">
+          <p>{currentUser?.firstname} {currentUser?.lastname}</p>
+          <!-- svelte-ignore a11y-click-events-have-key-events -->
+          <div class="flex flex-row md:block cursor-pointer" on:click={() => signOut()}>
             <SignOut />
-        </div>
+          </div>
+      </div>
       </div>
     </nav>
 </header>
