@@ -85,7 +85,9 @@
 
   // Run fetchData when currentChatUser changes
   $: {
-    fetchData();
+    if (currentChatUser.ID) {
+      fetchData()
+    }
   }
 </script>
 
